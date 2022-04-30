@@ -1,8 +1,9 @@
 name: Nas-tools Build Synology SPK
 
 on:
+  workflow_dispatch:
   push:
-    branches: [ master ]
+    #branches: [ master ]
     paths:
       - version.py
 
@@ -50,13 +51,4 @@ jobs:
         asset_name: nastool_dsm6_${{ env.app_version }}.spk
         asset_content_type: application/gzip
 
-    - name: Send telegram message
-      uses: appleboy/telegram-action@master
-      with:
-        to: ${{ secrets.TELEGRAM_TO }}
-        token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: |
-          ${{ github.actor }} created commit:
-          Commit message: ${{ github.event.commits[0].message }}
-          Repository: ${{ github.repository }}
-          See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
+
