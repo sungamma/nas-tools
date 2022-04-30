@@ -5,7 +5,7 @@ on:
   # push:
   # 定时任务触发，使用 cron 规则，这里默认一小时执行一次
   schedule:
-    - cron: '*/30 * * * *' # every 30 minutes
+    - cron: '*/60 * * * *' # every 60 minutes
   workflow_dispatch: # on button click
 
 jobs:
