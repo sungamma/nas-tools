@@ -1,6 +1,5 @@
 name: Nas-tools Build Docker Image
 on:
-  workflow_dispatch:
   push:
     branches:
       - master
@@ -9,6 +8,7 @@ on:
       - docker/Dockerfile
       - docker/entrypoint.sh
       - version.py
+  workflow_dispatch:
 
 jobs:
   build:
