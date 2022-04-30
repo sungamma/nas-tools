@@ -24,8 +24,6 @@ jobs:
           # 自行替换要同步的上游仓库地址
           git remote add upstream https://github.com/jxxghp/nas-tools.git
           git fetch upstream
-
-          # 可以自定义要同步的分支
           
           # 可以自定义要同步的分支
           # git checkout -b master origin/master
