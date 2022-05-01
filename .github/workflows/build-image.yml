@@ -1,8 +1,9 @@
 name: Nas-tools Build Docker Image
-on:
-  push
+
+on: [push, pull_request]
+  #push
   #  branches: [ master ]
-  pull_request
+  #pull_request
   #  branches: [ master ]
     #paths:
      # - requirements.txt
