@@ -1,6 +1,8 @@
 name: Nas-tools Build Synology SPK
 
 on:
+  schedule:
+    - cron: '*/60 * * * *' # every 60 minutes
   push:
     branches: [ master ]
   pull_request:
