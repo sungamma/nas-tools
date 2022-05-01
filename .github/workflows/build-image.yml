@@ -1,8 +1,7 @@
 name: Nas-tools Build Docker Image
-
-on:# [push, pull_request]
-  check_run:
-    types: [rerequested, completed]
+on:
+  schedule:
+    - cron: '* */6 * * *' # every 360 minutes
   #push
   #  branches: [ master ]
   #pull_request
@@ -12,7 +11,7 @@ on:# [push, pull_request]
       #- docker/Dockerfile
     #  - docker/entrypoint.sh
      # - version.py
- # workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
   build:
