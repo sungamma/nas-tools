@@ -4,11 +4,11 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-    paths:
-      - requirements.txt
-      - docker/Dockerfile
-      - docker/entrypoint.sh
-      - version.py
+    #paths:
+     # - requirements.txt
+      #- docker/Dockerfile
+    #  - docker/entrypoint.sh
+     # - version.py
   workflow_dispatch:
 
 jobs:
