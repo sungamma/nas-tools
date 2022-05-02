@@ -31,9 +31,14 @@ jobs:
           git rebase upstream/master  # rebase 处理可能存在的冲突
           git push -u origin master -f
 
-      - name: Invoke workflow with inputs
+      - name: Invoke workflow without inputs. Wait for result
         uses: aurelien-baudet/workflow-dispatch@v2
         with:
-          workflow: Another Workflow
+          workflow: Nas-tools Build Docker Image
           token: ${{ secrets.ACTIONS_TRIGGER_PAT }}
-#          inputs: '{ "message": "sync ok" }'
+
+      - name: Invoke workflow without inputs. Wait for result
+        uses: aurelien-baudet/workflow-dispatch@v2
+        with:
+          workflow: Nas-tools Build Synology SPK
+          token: ${{ secrets.ACTIONS_TRIGGER_PAT }}
