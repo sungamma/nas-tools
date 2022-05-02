@@ -31,14 +31,16 @@ jobs:
           git rebase upstream/master  # rebase 处理可能存在的冲突
           git push -u origin master -f
 
-      - name: Invoke workflow without inputs. Wait for result
+      - name: Invoke workflow without inputs. Wait for result-BUILD DOCKER
         uses: aurelien-baudet/workflow-dispatch@v2
         with:
           workflow: Nas-tools Build Docker Image
           token: ${{ secrets.ACTIONS_TRIGGER_PAT }}
+          wait-for-completion: false
 
-      - name: Invoke workflow without inputs. Wait for result
+      - name: Invoke workflow without inputs. Wait for result-BUILD SPK
         uses: aurelien-baudet/workflow-dispatch@v2
         with:
           workflow: Nas-tools Build Synology SPK
           token: ${{ secrets.ACTIONS_TRIGGER_PAT }}
+          wait-for-completion: false
