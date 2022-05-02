@@ -1,0 +1,32 @@
+name: Merge upstream
+
+on:
+  # 推送代码后触发
+  # push:
+  # 定时任务触发，使用 cron 规则，这里默认一小时执行一次
+  # schedule:
+  #   - cron: '*/60 * * * *' # every 60 minutes
+  workflow_dispatch: # on button click
+  repository_dispatch:  # 利用update-chechker.yml检测到更新后，再更新上游代码
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Merge upstream
+        run: |
+          # 使用自己的用户名替换 username
+          git config --global user.name 'sungamma'
+          git config --global user.email 'sungamma@users.noreply.github.com'
+
+          git pull --unshallow
+
+          # 自行替换要同步的上游仓库地址
+          git remote add upstream https://github.com/jxxghp/nas-tools.git
+          git fetch upstream
+          
+          # 可以自定义要同步的分支
+          # git checkout -b master origin/master
+          git rebase upstream/master  # rebase 处理可能存在的冲突
+          git push -u origin master -f

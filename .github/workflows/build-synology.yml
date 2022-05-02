@@ -1,15 +1,24 @@
 name: Nas-tools Build Synology SPK
 
 on:
-  push:
-    branches: [ master ]
-    paths:
-      - version.py
+  # schedule:
+  #   - cron: '*/60 * * * *' # every 60 minutes
+  # push:
+  #   branches: [ master ]
+  # pull_request:
+  #   branches: [ master ]
+  #   paths:
+  #     - version.py
+  repository_dispatch: # 利用update-chechker.yml检测到更新后，再编译
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - name: Wait for Sync
+      run: |
+        sleep 180  #等待同步上游3分钟后再编译
     - uses: actions/checkout@v2
     - name: Build the synology spk
       run: |
@@ -50,13 +59,4 @@ jobs:
         asset_name: nastool_dsm6_${{ env.app_version }}.spk
         asset_content_type: application/gzip
 
-    - name: Send telegram message
-      uses: appleboy/telegram-action@master
-      with:
-        to: ${{ secrets.TELEGRAM_TO }}
-        token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: |
-          ${{ github.actor }} created commit:
-          Commit message: ${{ github.event.commits[0].message }}
-          Repository: ${{ github.repository }}
-          See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
+
