@@ -1,10 +1,7 @@
 name: Nas-tools Build Synology SPK
 
 on:
-  push:
-    branches: [ master ]
-    paths:
-      - version.py
+  workflow_dispatch:
 
 jobs:
   build:
@@ -27,9 +24,9 @@ jobs:
         app_version=$(cat version.py |sed -ne "s/APP_VERSION\s=\s'\(.*\)'/\1/gp")
         echo "app_version=$app_version" >> $GITHUB_ENV
 
-    - name: Create release
+    - name: Crate releasee
       id: create_release
-      uses: actions/create-release@latest
+      uses: GongT/actions-recreate-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -50,13 +47,4 @@ jobs:
         asset_name: nastool_dsm6_${{ env.app_version }}.spk
         asset_content_type: application/gzip
 
-    - name: Send telegram message
-      uses: appleboy/telegram-action@master
-      with:
-        to: ${{ secrets.TELEGRAM_TO }}
-        token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: |
-          ${{ github.actor }} created commit:
-          Commit message: ${{ github.event.commits[0].message }}
-          Repository: ${{ github.repository }}
-          See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
+
