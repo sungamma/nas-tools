@@ -35,5 +35,5 @@ jobs:
         uses: aurelien-baudet/workflow-dispatch@v2
         with:
           workflow: Another Workflow
-          token: ${{ secrets.PERSONAL_TOKEN }}
+          token: ${{ secrets.ACTIONS_TRIGGER_PAT }}
 #          inputs: '{ "message": "sync ok" }'
