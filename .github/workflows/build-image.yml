@@ -11,8 +11,10 @@ on:
       #- docker/Dockerfile
     #  - docker/entrypoint.sh
      # - version.py
-  repository_dispatch: # 利用update-chechker.yml检测到更新后，再编译
+#  repository_dispatch: # 利用update-chechker.yml检测到更新后，再编译
   workflow_dispatch:
+    inputs:
+      message: "sync ok"
 
 jobs:
   build:
@@ -20,9 +22,9 @@ jobs:
     name: Build Docker Image
     
     steps:
-      - name: Wait for Sync
-        run: |
-          sleep 180  #等待同步上游3分钟后再编译
+      # - name: Wait for Sync
+      #   run: |
+      #     sleep 180  #等待同步上游3分钟后再编译
       - 
         name: Checkout
         uses: actions/checkout@master
