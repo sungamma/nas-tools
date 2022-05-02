@@ -36,4 +36,4 @@ jobs:
         with:
           workflow: Another Workflow
           token: ${{ secrets.PERSONAL_TOKEN }}
-          inputs: '{ "message": "sync ok" }'
+#          inputs: '{ "message": "sync ok" }'
