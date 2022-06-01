@@ -24,9 +24,9 @@ jobs:
         app_version=$(cat version.py |sed -ne "s/APP_VERSION\s=\s'\(.*\)'/\1/gp")
         echo "app_version=$app_version" >> $GITHUB_ENV
 
-    - name: Create release
+    - name: Crate releasee
       id: create_release
-      uses: actions/create-release@latest
+      uses: GongT/actions-recreate-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
