@@ -1,11 +1,12 @@
 name: Nas-tools Build Synology SPK
 
 on:
-  push:
-    branches: [ master ]
-    paths:
-      - version.py
-      - .github/workflows/build-synology.yml
+  workflow_dispatch:
+  # push:
+  #   branches: [ master ]
+  #   paths:
+  #     - version.py
+  #     - .github/workflows/build-synology.yml
 
 jobs:
   build:
@@ -64,11 +65,11 @@ jobs:
         release_id: ${{ steps.create_release.outputs.id }}
         assets_path: spks/
 
-    - name: Send telegram message
-      uses: appleboy/telegram-action@master
-      with:
-        to: ${{ secrets.TELEGRAM_TO }}
-        token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: |
-          ${{ github.event.commits[0].message }}
-          Repository: ${{ github.repository }}
+    # - name: Send telegram message
+    #   uses: appleboy/telegram-action@master
+    #   with:
+    #     to: ${{ secrets.TELEGRAM_TO }}
+    #     token: ${{ secrets.TELEGRAM_TOKEN }}
+    #     message: |
+    #       ${{ github.event.commits[0].message }}
+    #       Repository: ${{ github.repository }}
