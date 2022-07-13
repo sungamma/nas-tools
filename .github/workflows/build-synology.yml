@@ -1,6 +1,7 @@
 name: Nas-tools Build Synology SPK
 
 on:
+  workflow_dispatch:
   push:
     branches: [ master ]
     paths:
@@ -45,7 +46,8 @@ jobs:
 
     - name: Create release
       id: create_release
-      uses: actions/create-release@latest
+      # uses: actions/create-release@latest
+      uses: GongT/actions-recreate-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -64,11 +66,11 @@ jobs:
         release_id: ${{ steps.create_release.outputs.id }}
         assets_path: spks/
 
-    - name: Send telegram message
-      uses: appleboy/telegram-action@master
-      with:
-        to: ${{ secrets.TELEGRAM_TO }}
-        token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: |
-          ${{ github.event.commits[0].message }}
-          Repository: ${{ github.repository }}
+    # - name: Send telegram message
+    #   uses: appleboy/telegram-action@master
+    #   with:
+    #     to: ${{ secrets.TELEGRAM_TO }}
+    #     token: ${{ secrets.TELEGRAM_TOKEN }}
+    #     message: |
+    #       ${{ github.event.commits[0].message }}
+    #       Repository: ${{ github.repository }}

@@ -33,6 +33,13 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       
       - 
+        name: Release version
+        id: release_version
+        run: |
+          app_version=$(cat version.py |sed -ne "s/APP_VERSION\s=\s'\(.*\)'/\1/gp")
+          echo "app_version=$app_version" >> $GITHUB_ENV  
+
+      - 
         name: Buildx
         uses: docker/build-push-action@v2
         with:
@@ -46,3 +53,4 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/nas-tools:latest
+            ${{ secrets.DOCKER_USERNAME }}/nas-tools:${{ env.app_version }} 
