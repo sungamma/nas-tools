@@ -1,6 +1,7 @@
 name: Nas-tools Build Synology SPK-1
 
 on:
+  workflow_dispatch:
   push:
     branches: [ master ]
     paths:
