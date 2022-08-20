@@ -16,6 +16,7 @@ import xml.dom.minidom
 import log
 from pt.douban import DouBan
 from pt.filterrules import FilterRule
+from pt.indexer.builtin import BuiltinIndexer
 from pt.sites import Sites
 from pt.downloader import Downloader
 from pt.searcher import Searcher
@@ -30,7 +31,7 @@ from utils.sqls import *
 from utils.types import *
 from version import APP_VERSION
 from web.action import WebAction
-from web.backend.web_utils import LOGIN_WALLPAPER
+from web.backend.web_utils import get_login_wallpaper
 from web.backend.webhook_event import WebhookEvent
 from utils.WXBizMsgCrypt3 import WXBizMsgCrypt
 
@@ -156,7 +157,7 @@ def create_flask_app(config):
                 if userid is None or username is None:
                     return render_template('login.html',
                                            GoPage=GoPage,
-                                           LoginWallpaper=LOGIN_WALLPAPER)
+                                           LoginWallpaper=get_login_wallpaper())
                 else:
                     return render_template('navigation.html',
                                            GoPage=GoPage,
@@ -167,7 +168,7 @@ def create_flask_app(config):
             else:
                 return render_template('login.html',
                                        GoPage=GoPage,
-                                       LoginWallpaper=LOGIN_WALLPAPER)
+                                       LoginWallpaper=get_login_wallpaper())
 
         else:
             GoPage = request.form.get('next') or ""
@@ -179,13 +180,13 @@ def create_flask_app(config):
             if not username:
                 return render_template('login.html',
                                        GoPage=GoPage,
-                                       LoginWallpaper=LOGIN_WALLPAPER,
+                                       LoginWallpaper=get_login_wallpaper(),
                                        err_msg="请输入用户名")
             user_info = get_user(username)
             if not user_info:
                 return render_template('login.html',
                                        GoPage=GoPage,
-                                       LoginWallpaper=LOGIN_WALLPAPER,
+                                       LoginWallpaper=get_login_wallpaper(),
                                        err_msg="用户名或密码错误")
             # 创建用户实体
             user = User(user_info)
@@ -204,7 +205,7 @@ def create_flask_app(config):
             else:
                 return render_template('login.html',
                                        GoPage=GoPage,
-                                       LoginWallpaper=LOGIN_WALLPAPER,
+                                       LoginWallpaper=get_login_wallpaper(),
                                        err_msg="用户名或密码错误")
 
     # 开始
@@ -453,7 +454,7 @@ def create_flask_app(config):
         SiteDict = []
         Indexers = Searcher().indexer.get_indexers() or []
         for item in Indexers:
-            SiteDict.append(item[1])
+            SiteDict.append(item.name)
 
         # 下载目录
         SaveDirs = WebAction().get_download_dirs()
@@ -509,7 +510,7 @@ def create_flask_app(config):
     def movie_rss():
         RssItems = get_rss_movies()
         RssSites = Sites().get_sites()
-        SearchSites = [item[1] for item in Searcher().indexer.get_indexers()]
+        SearchSites = [item.name for item in Searcher().indexer.get_indexers()]
         RuleGroups = FilterRule().get_rule_groups()
         return render_template("rss/movie_rss.html",
                                Count=len(RssItems),
@@ -527,7 +528,7 @@ def create_flask_app(config):
     def tv_rss():
         RssItems = get_rss_tvs()
         RssSites = Sites().get_sites()
-        SearchSites = [item[1] for item in Searcher().indexer.get_indexers() or []]
+        SearchSites = [item.name for item in Searcher().indexer.get_indexers() or []]
         RuleGroups = FilterRule().get_rule_groups()
         return render_template("rss/tv_rss.html",
                                Count=len(RssItems),
@@ -1300,7 +1301,10 @@ def create_flask_app(config):
     @App.route('/indexer', methods=['POST', 'GET'])
     @login_required
     def indexer():
-        return render_template("setting/indexer.html", Config=config.get_config())
+        indexers = BuiltinIndexer().get_indexers()
+        return render_template("setting/indexer.html",
+                               Config=config.get_config(),
+                               Indexers=indexers)
 
     # 媒体库页面
     @App.route('/library', methods=['POST', 'GET'])
