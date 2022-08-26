@@ -24,16 +24,16 @@ jobs:
 
     - uses: actions/checkout@v2
       with:
-        fetch-depth: 0
+        fetch-depth: 1
     - name: Release version and last commit
       id: release_version
       run: |
         app_version=$(cat version.py |sed -ne "s/APP_VERSION\s=\s'v\(.*\)'/\1/gp")
         echo "app_version=$app_version" >> $GITHUB_ENV
         # git log HEAD^ -1 --format=%B > commit.txt #显示最新的提交信息到commit.txt
-        # git log v${app_version}^..HEAD^ --pretty=format:%an"  "%cd"   "%B > commit.txt #显示版本到现在的所有提交信息到commit.txt
+        # git log v${app_version}^..HEAD^ --pretty=format:%an"  "%cd"   "%B > commit.txt #显示版本到现在的所有提交信息到commit.txt,只有在merge-upstream后才能正常显示
         cp ../commit.txt ./
-        cat commit.txt
+        # cat commit.txt
         # rm -rf jxxghp          checkout 时直接会删除之前的所有内容
 
     # - name: Setup Debug Session
