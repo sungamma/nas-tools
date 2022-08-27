@@ -164,8 +164,8 @@ jobs:
       run: |
         mkdir releases
         cd synology
-        mv nastool_dsm_6.x.spk /home/runner/work/nas-tools/nas-tools/releases/nastool_dsm_6.x_v${{ env.app_version }}.spk
-        mv nastool_dsm_7.x.spk /home/runner/work/nas-tools/nas-tools/releases/nastool_dsm_7.x_v${{ env.app_version }}.spk
+        mv nastool_dsm_6.spk /home/runner/work/nas-tools/nas-tools/releases/nastool_dsm_6.x_v${{ env.app_version }}.spk
+        mv nastool_dsm_7.spk /home/runner/work/nas-tools/nas-tools/releases/nastool_dsm_7.x_v${{ env.app_version }}.spk
         cd ../windows
         mv nas-tools.exe /home/runner/work/nas-tools/nas-tools/releases/nas-tools_v${{ env.app_version }}.exe
     - name: Upload release asset
