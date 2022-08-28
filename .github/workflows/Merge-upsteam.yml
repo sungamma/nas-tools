@@ -35,7 +35,7 @@ jobs:
           yq -i '.name="Nas-tools Build-2"' build-2.yml
           cat build-2.yml
           git add .
-          git stash
+          git commit -m "create build-2.yml"
 
       - name: Merge upstream
         run: |
