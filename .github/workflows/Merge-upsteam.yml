@@ -33,10 +33,9 @@ jobs:
           cp build.yml build-2.yml
           myenv=$(cat tmpbuild.yml) yq -i '.jobs.create-release=env(myenv)' build-2.yml
           yq -i '.name="Nas-tools Build-2"' build-2.yml
+          cat build-2.yml
           git add .
           git stash
-          
-          cat build-2.yml
 
       - name: Merge upstream
         run: |
