@@ -22,28 +22,24 @@ jobs:
       - name: install yq
         run: |
           sudo snap install yq
+      - name: Setup git
+        run: |
+          git config --global user.name "sungamma"
+          git config --global user.email  "33790+sungamma@users.noreply.github.com"
 
       # - name: Setup Debug Session
       #   uses: csexton/debugger-action@master
 
-      - name: Create a new build-2.yml from build.yml
+      - name: Compare the build.yml and recreate the build-2.yml
         run: |        
           cd .github/workflows
-          yq '.jobs.create-release' build-1.yml>tmpbuild.yml
-          cp build.yml build-2.yml
-          myenv=$(cat tmpbuild.yml) yq -i '.jobs.create-release=env(myenv)' build-2.yml
-          yq -i '.name="Nas-tools Build-2"' build-2.yml
-          cat build-2.yml
-          git add .
+          bash merge.sh
 
 
       - name: Merge upstream
         run: |
           # 使用自己的用户名替换 username
-          git config --global user.name "sungamma"
-          git config --global user.email  "33790+sungamma@users.noreply.github.com"
-          
-          git commit -m "create build-2.yml"
+
 
           # git pull --unshallow
 
