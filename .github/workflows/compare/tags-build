@@ -68,4 +68,5 @@ steps:
       message: |
         *v${{ env.app_version }}*
         ${{ github.event.commits[0].message }}
+      message_file: commit.txt
       document: /home/runner/work/nas-tools/nas-tools/releases/nastool_win_v${{ env.app_version }}.exe
