@@ -94,7 +94,7 @@ jobs:
           assets_path: |
             /home/runner/work/nas-tools/nas-tools/releases/
       - name: shorten the commits message_file
-        run: head -180 commit.txt >commit2.txt
+        run: head -120 commit.txt >commit2.txt
       - name: Send telegram message (release informations)
         uses: appleboy/telegram-action@master
         with:
