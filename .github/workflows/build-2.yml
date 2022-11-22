@@ -38,7 +38,7 @@ jobs:
             linux/amd64
             linux/arm64
           push: true
-          tags: |-
+          tags: |
             ${{ secrets.DOCKER_USERNAME }}/nas-tools:latest
             ${{ secrets.DOCKER_USERNAME }}/nas-tools:${{ env.app_version }}
   Create-release_Send-message:
