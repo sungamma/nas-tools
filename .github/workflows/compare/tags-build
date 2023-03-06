@@ -1,0 +1,83 @@
+permissions: write-all
+runs-on: ubuntu-latest
+needs: [Windows-build]
+steps:
+  - name: Get the tags from the NAStool/nas-tools
+    run: |
+      mkdir jxxghp
+      cd jxxghp
+      git clone https://github.com/NAStool/nas-tools.git
+      cd nas-tools
+      app_version=$(cat version.py |sed -ne "s/APP_VERSION\s=\s'v\(.*\)'/\1/gp")
+      echo "app_version=$app_version" >> $GITHUB_ENV
+      git log v${app_version}^..HEAD --pretty=format:%an"  "%cd"   "%B > ../../../commit.txt #显示版本到现在的所有提交信息到commit.txt
+      
+  - uses: actions/checkout@v2
+    with:
+      fetch-depth: 1
+  - name: Release version and last commit
+    id: release_version
+    run: |
+      app_version=$(cat version.py |sed -ne "s/APP_VERSION\s=\s'v\(.*\)'/\1/gp")
+      echo "app_version=$app_version" >> $GITHUB_ENV
+      # git log HEAD^ -1 --format=%B > commit.txt #显示最新的提交信息到commit.txt
+      # git log v${app_version}^..HEAD^ --pretty=format:%an"  "%cd"   "%B > commit.txt #显示版本到现在的所有提交信息到commit.txt,只有在merge-upstream后才能正常显示
+      cp ../commit.txt ./
+      # cat commit.txt
+      # rm -rf jxxghp          checkout 时直接会删除之前的所有内容
+  # - name: Setup Debug Session
+  #   uses: csexton/debugger-action@master
+
+  - name: download exe and rename
+    uses: actions/download-artifact@v3
+  - name: get release_informations
+    shell: bash
+    run: |
+      pwd
+      mkdir releases
+      cd windows
+      mv nas-tools.exe /home/runner/work/nas-tools/nas-tools/releases/nastool_win_v${{ env.app_version }}.exe
+      pwd
+
+  - name: Create release
+    id: create_release
+    uses: GongT/actions-recreate-release@v1
+     # 每次更新重新打包
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      tag_name: v${{ env.app_version }}
+      release_name: v${{ env.app_version }}
+      # body: ${{ last_commit }}
+      body_path: commit.txt
+      draft: false
+      prerelease: false
+
+  - name: Upload release asset
+    uses: dwenegar/upload-release-assets@v1
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      release_id: ${{ steps.create_release.outputs.id }}
+      assets_path: |
+        /home/runner/work/nas-tools/nas-tools/releases/
+
+  - name: shorten the commits message_file
+    run: head -120 commit.txt >commit2.txt
+
+  - name: Compress large nastool_win.exe into volumes
+    run: tar czf - /home/runner/work/nas-tools/nas-tools/releases/nastool_win_v${{ env.app_version }}.exe | split -b 40m - /home/runner/work/nas-tools/nas-tools/releases/nastool_win_v${{ env.app_version }}.tar.gz
+
+  - name: Send telegram message (release informations)
+    uses: appleboy/telegram-action@master
+    with:
+      to: ${{ secrets.TELEGRAM_TO }}
+      token: ${{ secrets.TELEGRAM_TOKEN }}
+      format: markdown
+      message: |
+        *v${{ env.app_version }}*
+        ${{ github.event.commits[0].message }}
+      message_file: commit2.txt
+      # document: /home/runner/work/nas-tools/nas-tools/releases/nastool_win_v${{ env.app_version }}.exe
+      document: /home/runner/work/nas-tools/nas-tools/releases/nastool_win_v${{ env.app_version }}.tar.gz*
+
