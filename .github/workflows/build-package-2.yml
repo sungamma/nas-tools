@@ -186,7 +186,7 @@ jobs:
           cp -r ./db_scripts/. $Python_ROOT_DIR/lib/python3.10/site-packages/db_scripts/
           cd package
           pyinstaller nas-tools.spec
-          mv ./dist/nas-tools ./dist/nas-tools.mac
+          mv ./dist/nas-tools ./dist/nas-tools.macos
           pwd
           ls -all ./dist/
         shell: bash
@@ -247,5 +247,5 @@ jobs:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           format: markdown
-          message: |
+          message: |-
             ${{ github.event.commits[0].message }}
