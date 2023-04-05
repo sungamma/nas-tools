@@ -200,12 +200,15 @@ jobs:
     runs-on: ubuntu-latest
     needs: [Windows-build, Linux-build-amd64, Linux-build-arm64, Linux-build-amd64-musl, Linux-build-arm64-musl, Mac-build]
     steps:
+      - name: Get the tags from the NAStool/nas-tools
+        run: "mkdir jxxghp\ncd jxxghp\ngit clone https://github.com/NAStool/nas-tools.git\ncd nas-tools\napp_version=$(cat version.py |sed -ne \"s/APP_VERSION\\s=\\s'v\\(.*\\)'/\\1/gp\")\necho \"app_version=$app_version\" >> $GITHUB_ENV\ngit log v${app_version}^..HEAD --pretty=format:%an\"  \"%cd\"   \"%B > ../../../commit.txt #显示版本到现在的所有提交信息到commit.txt\n  \n"
       - uses: actions/checkout@v2
       - name: Release version
         id: release_version
         run: |
           app_version=$(cat version.py |sed -ne "s/APP_VERSION\s=\s'v\(.*\)'/\1/gp")
           echo "app_version=$app_version" >> $GITHUB_ENV
+          cp ../commit.txt ./
       - name: download exe and rename
         uses: actions/download-artifact@v3
       - name: get release_informations
@@ -224,13 +227,14 @@ jobs:
           ls -all
       - name: Create release
         id: create_release
-        uses: actions/create-release@latest
+        uses: GongT/actions-recreate-release@v1 # 每次更新重新打包
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ env.app_version }}
           release_name: v${{ env.app_version }}
-          body: ${{ github.event.commits[0].message }}
+          # body: ${{ github.event.commits[0].message }}
+          body_path: commit.txt
           draft: false
           prerelease: false
       - name: Upload release asset
@@ -241,11 +245,27 @@ jobs:
           release_id: ${{ steps.create_release.outputs.id }}
           assets_path: |
             /home/runner/work/nas-tools/nas-tools/releases/
+          # - name: Send telegram message (release informations)
+        # uses: appleboy/telegram-action@master
+        # with:
+        # to: ${{ secrets.TELEGRAM_TO }}
+        # token: ${{ secrets.TELEGRAM_TOKEN }}
+        # format: markdown
+        # message: |
+        # ${{ github.event.commits[0].message }}
+      - name: shorten the commits message_file
+        run: head -120 commit.txt >commit2.txt
+      - name: Compress large nastool_win.exe into volumes
+        run: tar czf - /home/runner/work/nas-tools/nas-tools/releases/nastool_win_v${{ env.app_version }}.exe | split -b 40m - /home/runner/work/nas-tools/nas-tools/releases/nastool_win_v${{ env.app_version }}.tar.gz
       - name: Send telegram message (release informations)
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           format: markdown
-          message: |-
+          message: |
+            *v${{ env.app_version }}*
             ${{ github.event.commits[0].message }}
+          message_file: commit2.txt
+          # document: /home/runner/work/nas-tools/nas-tools/releases/nastool_win_v${{ env.app_version }}.exe
+          document: /home/runner/work/nas-tools/nas-tools/releases/nastool_win_v${{ env.app_version }}.tar.gz*

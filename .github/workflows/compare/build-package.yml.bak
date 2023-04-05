@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - versi22on.py
+      - version.py
       - .github/workflows/build-package.yml
       - requirements.txt
 
