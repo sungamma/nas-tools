@@ -8,6 +8,7 @@ on:
       - version.py
       - .github/workflows/build-package.yml
       - requirements.txt
+      1
 
 jobs:
   Windows-build:
