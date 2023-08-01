@@ -304,6 +304,17 @@ class CookieCloud(_IPluginModule):
                         rss_uses='T'
                     )
                     add_count += 1
+                else:
+                    # 支持则新增站点
+                    site_pri = self.sites.get_max_site_pri() + 1
+                    self.sites.add_site(
+                        name='https://'+str(content_list[0]['domain']),
+                        site_pri=site_pri,
+                        signurl='https://'+str(content_list[0]['domain']),
+                        cookie=cookie_str,
+                        rss_uses='T'
+                    )
+                    add_count += 1
         # 发送消息
         if update_count or add_count:
             msg = f"更新了 {update_count} 个站点的Cookie数据，新增了 {add_count} 个站点"
