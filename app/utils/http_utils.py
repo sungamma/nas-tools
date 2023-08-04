@@ -98,6 +98,18 @@ class RequestUtils:
         except requests.exceptions.RequestException:
             return None
 
+
+    def get_img(self, url, params=None):
+        try:
+            return requests.get(url,
+                             verify=False,
+                             headers=self._headers,
+                             proxies=self._proxies,
+                             timeout=self._timeout,
+                             params=params)
+        except requests.exceptions.RequestException:
+            return None
+
     def get_res(self, url, params=None, allow_redirects=True, raise_exception=False):
         try:
             if self._session:

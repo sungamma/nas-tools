@@ -1,14 +1,17 @@
 import json
 import os.path
+import sys
 import tempfile
+import zipfile
 from functools import reduce
 from threading import Lock
 
+import requests
 import undetected_chromedriver as uc
 from webdriver_manager.chrome import ChromeDriverManager
 
 import app.helper.cloudflare_helper as CloudflareHelper
-from app.utils import SystemUtils, RequestUtils
+from app.utils import SystemUtils, RequestUtils, ExceptionUtils
 from config import Config
 
 lock = Lock()
@@ -41,7 +44,39 @@ class ChromeHelper(object):
         if not uc.find_chrome_executable():
             return
         global driver_executable_path
-        driver_executable_path = ChromeDriverManager().install()
+        try:
+            driver_executable_path = ChromeDriverManager().install()
+        except:
+            try:
+                def chrome_driver():
+                    """
+                    下载ChromeDriver
+                    @return:
+                    """
+                    root_path=os.path.dirname(os.path.realpath(sys.argv[0]))
+                    last = "https://chromedriver.storage.googleapis.com/LATEST_RELEASE"
+                    version = requests.get(last).text
+                    download_url = f"https://registry.npmmirror.com/-/binary/chromedriver/{version}/chromedriver_win32.zip"
+                    remote_file = requests.get(download_url)
+                    file_path = os.path.join(root_path, 'config', 'temp',"chromedriver_win32.zip")
+                    with open(file_path, "wb") as file:
+                        file.write(remote_file.content)
+                    zip_ref = zipfile.ZipFile(file_path, "r")
+                    contents = zip_ref.namelist()
+                    f_name = 'chromedriver.exe'
+                    if not f_name in contents:
+                        raise ValueError('【chromedriver】未获取到chromedriver文件')
+                    new_file = os.path.join(root_path, 'config', str(f_name))
+                    if os.path.exists(new_file):
+                        os.remove(new_file)
+                    zip_ref.extractall(os.path.join(root_path, 'config'))
+                    zip_ref.close()
+                    os.remove(file_path)
+                    return new_file
+                driver_executable_path=chrome_driver()
+            except Exception as e:
+                ExceptionUtils.exception_traceback(e)
+                quit()
 
     @property
     def browser(self):

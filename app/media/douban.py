@@ -457,7 +457,7 @@ class DouBan:
                 'media_type': mtype.value,
                 'year': year[:4] if year else "",
                 'vote': vote_average,
-                'image': poster_path,
+                'image': '/img?url='+poster_path,
                 'overview': overview
             })
         return ret_infos

@@ -39,7 +39,7 @@ from app.sites import Sites, SiteUserInfo
 from app.subscribe import Subscribe
 from app.sync import Sync
 from app.torrentremover import TorrentRemover
-from app.utils import DomUtils, SystemUtils, ExceptionUtils, StringUtils
+from app.utils import DomUtils, SystemUtils, ExceptionUtils, StringUtils, RequestUtils
 from app.utils.types import *
 from config import PT_TRANSFER_INTERVAL, Config, TMDB_API_DOMAINS
 from web.action import WebAction
@@ -1663,10 +1663,18 @@ def Img():
     if if_none_match and if_none_match == etag:
         return make_response('', 304)
     # 获取图片数据
-    response = Response(
-        WebUtils.request_cache(url),
-        mimetype='image/jpeg'
-    )
+    if (url.__contains__('douban')):
+        response = Response(
+            RequestUtils(
+                referer="douban.com",
+                content_type='image/webp'
+            ).get_img(url)
+        )
+    else:
+        response = Response(
+            WebUtils.request_cache(url),
+            mimetype='image/jpeg'
+        )
     response.headers.set('Cache-Control', 'max-age=604800')
     response.headers.set('Etag', etag)
     return response
