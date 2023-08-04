@@ -11,7 +11,7 @@ steps:
     app_version=$(cat version.py |sed -ne "s/APP_VERSION\s=\s'v\(.*\)'/\1/gp")
     echo "app_version=$app_version" >> $GITHUB_ENV
     git log v${app_version}^..HEAD --pretty=format:%an"  "%cd"   "%B > ../../../commit.txt #显示版本到现在的所有提交信息到commit.txt
-      
+
 - uses: actions/checkout@v2
 - name: Release version
   id: release_version

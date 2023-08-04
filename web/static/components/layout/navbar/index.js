@@ -198,7 +198,7 @@ export class LayoutNavbar extends CustomElement {
                            <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"></path>
                            <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
                            <path d="M16 11l2 2l4 -4"></path>
-                        </svg> 
+                        </svg>
                         用户认证
                       </strong>
                     </button>
@@ -214,11 +214,11 @@ export class LayoutNavbar extends CustomElement {
 
   _render_page_item(item, child) {
     return html`
-    <a class="nav-link lit-navbar-accordion-item${this._active_name === item.page ? "-active" : ""} my-1 p-2 ${child ? "ps-3" : "lit-navbar-accordion-button"}" 
+    <a class="nav-link lit-navbar-accordion-item${this._active_name === item.page ? "-active" : ""} my-1 p-2 ${child ? "ps-3" : "lit-navbar-accordion-button"}"
       href="#${item.page}" data-bs-dismiss="offcanvas" aria-label="Close"
       style="${child ? "font-size:1rem" : "font-size:1.1rem;"}"
       data-lit-page=${item.page}
-      @click=${ () => { 
+      @click=${ () => {
         this._add_page_to_url(item.page);
         navmenu(item.page);
       }}>
@@ -228,7 +228,7 @@ export class LayoutNavbar extends CustomElement {
       <span class="nav-link-title">
         ${item.also ?? item.name}
       </span>
-    </a>`    
+    </a>`
   }
 
 }

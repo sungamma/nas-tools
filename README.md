@@ -10,8 +10,8 @@
 
 
 Docker：
-* https://hub.docker.com/r/jxxghp/nas-tools 
-* https://hub.docker.com/r/nastool/nas-tools
+* https://hub.docker.com/r/jxxghp/nas-tools
+* https://hub.docker.com/r/NAStool/nas-tools
 
 TG频道：https://t.me/nastool_official
 
@@ -37,10 +37,10 @@ docker pull jxxghp/nas-tools:latest
 ### 2、本地运行
 python3.10版本，需要预安装cython，如发现缺少依赖包需额外安装：
 ```
-git clone -b master https://github.com/NAStool/nas-tools --recurse-submodule 
+git clone -b master https://github.com/NAStool/nas-tools --recurse-submodule
 python3 -m pip install -r requirements.txt
 export NASTOOL_CONFIG="/xxx/config/config.yaml"
-nohup python3 run.py & 
+nohup python3 run.py &
 ```
 
 ### 3、可执行文件
